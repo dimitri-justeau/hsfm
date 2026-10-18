@@ -167,8 +167,7 @@ def dem_align_custom(reference_dem,
     call = ['dem_align.py',reference_dem,
             dem_to_be_aligned,
             '-max_offset',str(max_offset),
-            '-mode', mode,
-            '-mask_list', 'glaciers', 'nlcd']
+            '-mode', mode]
     print(*call)
     if print_call==True:
         print(*call)
@@ -197,7 +196,7 @@ def mask_dem(dem,
     call.extend([output_directory])
     call.extend(masks)
     call.extend([dem])
-    
+
     hsfm.utils.run_command(call,verbose=verbose)
     
     return os.path.join(output_directory, base+'_ref.tif')
