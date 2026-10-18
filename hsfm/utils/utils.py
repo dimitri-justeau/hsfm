@@ -176,8 +176,12 @@ def dem_align_custom(reference_dem,
         dem_align_output_path = os.path.join(path,file_name+'_dem_align')
         log_file              = run_command(call, verbose=verbose, log_directory=dem_align_output_path)
         try:
-            dem_difference_file   = glob.glob(os.path.join(dem_align_output_path,'*_align_diff.tif'))[0]
-            aligned_dem_file      = glob.glob(os.path.join(dem_align_output_path,'*_align.tif'))[0]
+            dem_diff_files = glob.glob(os.path.join(dem_align_output_path,'*_align_diff.tif'))
+            dem_diff_files.sort(key=os.path.getmtime, reverse=True)
+            dem_difference_file = dem_diff_files[0]
+            aligned_dem_file = glob.glob(os.path.join(dem_align_output_path,'*_align.tif'))
+            aligned_dem_file.sort(key=os.path.getmtime, reverse=True)
+            aligned_dem_file = aligned_dem_file[0]
 
             return dem_difference_file , aligned_dem_file
         except:
