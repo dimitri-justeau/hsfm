@@ -237,16 +237,16 @@ def images2las(project_name,
 
     chunk.buildDepthMaps(downscale=densecloud_quality,
                          filter_mode=Metashape.AggressiveFiltering)
-    chunk.buildDenseCloud()
+    chunk.buildPointCloud()
     doc.save()
     
     # EXPORT
     
     chunk.exportReport(report_file)
     if export_point_cloud:
-        chunk.exportPoints(path=point_cloud_file,
-                           format=Metashape.PointsFormatLAS, 
-                           crs=chunk.crs)
+        chunk.exportPointCloud(path=point_cloud_file,
+                               format=Metashape.PointCloudFormatLAS,
+                               crs=chunk.crs)
 
     return metashape_project_file, point_cloud_file
 
@@ -322,7 +322,7 @@ def images2ortho(project_file,
     chunk = doc.chunk
     
     if build_dem:
-        chunk.buildDem(source_data=Metashape.DenseCloudData)
+        chunk.buildDem(source_data=Metashape.PointCloudData)
     
     if build_ortho:
         chunk.buildOrthomosaic(surface_data=Metashape.ElevationData)
@@ -554,7 +554,7 @@ def update_ba_camera_metadata(metashape_project_file,
     
     unaligned_cameras_df = metashape_metadata_df[metashape_metadata_df['image_file_name'].isin(unaligned_cameras_file_names)]
     unaligned_cameras_df = unaligned_cameras_df.reset_index(drop=True)
-    
+
     if bundle_adjusted_metadata_file:
         ba_cameras_df.to_csv(bundle_adjusted_metadata_file, index = False)
     
@@ -766,7 +766,7 @@ def update_metashape_cameras_after_transform(project_file,
 
     chunk.updateTransform()
 
-    chunk.dense_cloud.crs = chunk.crs
-    chunk.dense_cloud.transform = chunk.transform.matrix
+    chunk.point_cloud.crs = chunk.crs
+    chunk.point_cloud.transform = chunk.transform.matrix
     
     doc.save()
